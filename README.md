@@ -9,6 +9,10 @@ $ go get -u github.com/clarketm/json
 ```
 
 ## Usage
+```diff
+- import "encoding/json"
++ import "github.com/clarketm/json"
+```
 Same usage as Golang [`encoding/json`](https://golang.org/pkg/encoding/json/).
 
 ## Features
