@@ -1,5 +1,5 @@
 # [json](https://godoc.org/github.com/clarketm/json)
-> Mirrors [golang/go](https://github.com/golang/go) [![Golang version](https://img.shields.io/badge/go-1.13-green)](https://github.com/golang/go/releases/tag/go1.13)
+> Mirrors [golang/go](https://github.com/golang/go) [![Golang version](https://img.shields.io/badge/go-1.14-green)](https://github.com/golang/go/releases/tag/go1.14)
 
 Drop-in replacement for Golang [`encoding/json`](https://golang.org/pkg/encoding/json/) with additional features.
 
