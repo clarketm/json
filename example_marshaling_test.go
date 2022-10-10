@@ -1,4 +1,4 @@
-// Copyright 2016 The Go Authors. All rights reserved.
+// Copyright 2018 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -11,63 +11,57 @@ import (
 	"strings"
 )
 
-type Animal int
+type Size int
 
 const (
-	Unknown Animal = iota
-	Gopher
-	Zebra
+	Unrecognized Size = iota
+	Small
+	Large
 )
 
-func (a *Animal) UnmarshalJSON(b []byte) error {
-	var s string
-	if err := json.Unmarshal(b, &s); err != nil {
-		return err
-	}
-	switch strings.ToLower(s) {
+func (s *Size) UnmarshalText(text []byte) error {
+	switch strings.ToLower(string(text)) {
 	default:
-		*a = Unknown
-	case "gopher":
-		*a = Gopher
-	case "zebra":
-		*a = Zebra
+		*s = Unrecognized
+	case "small":
+		*s = Small
+	case "large":
+		*s = Large
 	}
-
 	return nil
 }
 
-func (a Animal) MarshalJSON() ([]byte, error) {
-	var s string
-	switch a {
+func (s Size) MarshalText() ([]byte, error) {
+	var name string
+	switch s {
 	default:
-		s = "unknown"
-	case Gopher:
-		s = "gopher"
-	case Zebra:
-		s = "zebra"
+		name = "unrecognized"
+	case Small:
+		name = "small"
+	case Large:
+		name = "large"
 	}
-
-	return json.Marshal(s)
+	return []byte(name), nil
 }
 
-func Example_customMarshalJSON() {
-	blob := `["gopher","armadillo","zebra","unknown","gopher","bee","gopher","zebra"]`
-	var zoo []Animal
-	if err := json.Unmarshal([]byte(blob), &zoo); err != nil {
+func Example_textMarshalJSON() {
+	blob := `["small","regular","large","unrecognized","small","normal","small","large"]`
+	var inventory []Size
+	if err := json.Unmarshal([]byte(blob), &inventory); err != nil {
 		log.Fatal(err)
 	}
 
-	census := make(map[Animal]int)
-	for _, animal := range zoo {
-		census[animal] += 1
+	counts := make(map[Size]int)
+	for _, size := range inventory {
+		counts[size] += 1
 	}
 
-	fmt.Printf("Zoo Census:\n* Gophers: %d\n* Zebras:  %d\n* Unknown: %d\n",
-		census[Gopher], census[Zebra], census[Unknown])
+	fmt.Printf("Inventory Counts:\n* Small:        %d\n* Large:        %d\n* Unrecognized: %d\n",
+		counts[Small], counts[Large], counts[Unrecognized])
 
 	// Output:
-	// Zoo Census:
-	// * Gophers: 3
-	// * Zebras:  2
-	// * Unknown: 3
+	// Inventory Counts:
+	// * Small:        3
+	// * Large:        2
+	// * Unrecognized: 3
 }
