@@ -356,6 +356,9 @@ func isEmptyValue(v reflect.Value) bool {
 			if vt.Field(i).PkgPath != "" {
 				continue // Private field
 			}
+			if vt.Field(i).Tag.Get("json") == "-" {
+				continue
+			}
 			if !isEmptyValue(v.Field(i)) {
 				return false
 			}
